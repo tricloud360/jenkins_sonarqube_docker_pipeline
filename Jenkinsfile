@@ -45,15 +45,8 @@ pipeline {
         stage('Build Docker Image') {
             steps {
                 echo 'Building Docker image on Docker server...'
-                sh "scp -o StrictHostKeyChecking=no -r ./ ubuntu@${DOCKER_SERVER_IP}:/home/ubuntu/website"
+                sh "scp -o StrictHostKeyChecking=no -r --exclude='.git' ./ ubuntu@${DOCKER_SERVER_IP}:/home/ubuntu/website"
                 sh "ssh -o StrictHostKeyChecking=no ubuntu@${DOCKER_SERVER_IP} \"cd /home/ubuntu/website && sudo docker build -t nexwebsite . && sudo docker run -d -p 8085:80 --name=Main-Website nexwebsite\""
-            }
-        }
-        
-        stage('Deploy') {
-            steps {
-                echo 'Deploying application...'
-                sh "ssh -o StrictHostKeyChecking=no ubuntu@${DOCKER_SERVER_IP} \"sudo docker run -d -p 80:80 --name website-container website-image\""
             }
         }
     }
