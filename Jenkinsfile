@@ -46,7 +46,7 @@ pipeline {
             steps {
                 echo 'Building Docker image on Docker server...'
                 sh "rsync -av --exclude='.git' ./ ubuntu@${DOCKER_SERVER_IP}:/home/ubuntu/website"
-                sh "ssh -o StrictHostKeyChecking=no ubuntu@${DOCKER_SERVER_IP} \"cd /home/ubuntu/website && sudo docker build -t nexwebsite . && sudo docker run -d -p 8085:80 --name=Main-Website --restart unless-stopped nexwebsite\""
+                sh "ssh -o StrictHostKeyChecking=no ubuntu@${DOCKER_SERVER_IP} \"cd /home/ubuntu/website && sudo docker stop Main-Website || true && sudo docker rm Main-Website || true && sudo docker build -t nexwebsite . && sudo docker run -d -p 8085:80 --name=Main-Website --restart unless-stopped nexwebsite\""
             }
         }
     }
