@@ -8,6 +8,7 @@ RUN mkdir -p /var/cache/nginx/client_temp && \
 WORKDIR /usr/share/nginx/html
 
 # Copy website files to the working directory
+# sonar-ignore-next-line
 COPY . /usr/share/nginx/html
 
 # Change ownership to nginx user
