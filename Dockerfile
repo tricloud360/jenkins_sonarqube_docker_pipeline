@@ -1,20 +1,20 @@
-# Use an official Nginx image as the base
 FROM nginx:alpine
 
-# Create a non-root user and group with IDs 1001
-RUN addgroup -g 1001 -S nginx_group && adduser -u 1001 -S nginx_user -G nginx_group
+# Create necessary directories with the correct permissions
+RUN mkdir -p /var/cache/nginx/client_temp && \
+    chown -R nginx:nginx /var/cache/nginx
 
-# Set the working directory inside the container
+# Set working directory inside container
 WORKDIR /usr/share/nginx/html
 
-# Copy the website files (HTML, CSS, JS) to the working directory
+# Copy website files to the working directory
 COPY . /usr/share/nginx/html
 
-# Change ownership of the working directory to the non-root user
-RUN chown -R nginx_user:nginx_group /usr/share/nginx/html
+# Change ownership to nginx user
+RUN chown -R nginx:nginx /usr/share/nginx/html
 
-# Switch to the non-root user
-USER nginx_user
-
-# Expose port 80 to allow external connections to the container
+# Expose port 80 for Nginx
 EXPOSE 80
+
+# Set user to nginx to avoid running as root
+USER nginx
